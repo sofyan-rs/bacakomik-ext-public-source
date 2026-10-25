@@ -345,7 +345,7 @@ git push
 The app can include some extensions at install time. After `bun run build`:
 
 ```sh
-bun run bundle ../bacakomik-app-flutter/assets/extensions bacakomik voratoon
+bun run bundle ../bacakomik-app-flutter/assets/extensions bacakomik
 ```
 
 This replaces everything in that folder with the extensions you list.

@@ -45,7 +45,7 @@ dist/                build output: index.json + extensions/*.js (committed, depl
 ```sh
 bun install                                     # dev deps: typescript, node-html-parser
 bun run build                                   # validate + write dist/
-bun run bundle ../bacakomik-app-flutter/assets/extensions bacakomik voratoon  # ship these with the app
+bun run bundle ../bacakomik-app-flutter/assets/extensions bacakomik  # ship these with the app
 bun run typecheck                               # tsc, checkJs over src/
 bun scripts/run.ts <id> smoke                   # end-to-end contract check against the live site
 bun scripts/run.ts <id> filters
@@ -158,12 +158,13 @@ Full typings: [`types/bridge.d.ts`](types/bridge.d.ts).
 
 ```json
 {
-  "id": "voratoon",
-  "name": "VoraToon",
+  "id": "bacakomik",
+  "name": "BacaKomik",
   "lang": "id",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "apiVersion": 1,
-  "baseUrl": "https://voratoon.co",
+  "baseUrl": "https://bacakomik.my",
+  "urlPatterns": ["^/komik/([^/?#]+)"],
   "nsfw": false
 }
 ```
@@ -185,9 +186,9 @@ import Mihon/Tachiyomi backups without running the script.
 {
   "name": "BacaKomik Extensions",
   "extensions": [
-    { "id": "...", "name": "...", "lang": "id", "version": "1.0.0", "apiVersion": 1,
+    { "id": "...", "name": "...", "lang": "id", "version": "1.2.0", "apiVersion": 1,
       "baseUrl": "...", "nsfw": false,
-      "file": "voratoon.v1.0.0.js", "sha256": "<hex of file bytes>" }
+      "file": "bacakomik.v1.2.0.js", "sha256": "<hex of file bytes>" }
   ]
 }
 ```
