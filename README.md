@@ -198,9 +198,3 @@ import Mihon/Tachiyomi backups without running the script.
 1. Create `src/<id>/meta.json` and `src/<id>/index.js`.
 2. `bun run typecheck && bun scripts/run.ts <id> smoke`
 3. `bun run build` and commit `src/` + `dist/`.
-
-## Credits
-
-Extensions ported from [keiyoushi/extensions-source](https://github.com/keiyoushi/extensions-source)
-(Apache License 2.0) keep a note at the top of their `index.js`, which the
-build keeps in the published file. Keep that note when porting one.

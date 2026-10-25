@@ -290,8 +290,7 @@ install the extension.
 
 If you copied code from
 [keiyoushi/extensions-source](https://github.com/keiyoushi/extensions-source),
-keep a credit note at the top of `index.js` and add a row to the Credits table
-in `README.md`.
+keep a credit note at the top of `index.js`.
 
 ---
 
