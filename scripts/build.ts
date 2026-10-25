@@ -9,7 +9,7 @@ import { loadExtension } from './run.ts'
 const ROOT = fileURLToPath(new URL('..', import.meta.url))
 const SRC = ROOT + 'src/'
 const DIST = ROOT + 'dist/'
-const REPO_NAME = 'BacaKomik Extensions'
+const REPO_NAME = 'BacaKomik Extensions Public'
 /** Folder of the scripts inside dist/. */
 const SCRIPTS = 'extensions'
 
