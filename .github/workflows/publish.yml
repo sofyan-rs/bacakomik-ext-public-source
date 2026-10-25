@@ -1,0 +1,46 @@
+# Builds the extensions and deploys dist/ to GitHub Pages
+# (https://sofyan-rs.github.io/bacakomik-ext-public-source/index.json).
+#
+# Setup, once: this repo > Settings > Pages > Source: "GitHub Actions".
+name: Publish
+
+on:
+  push:
+    branches: [main]
+    paths: ['src/**', 'scripts/**', 'dist/**', '.github/workflows/publish.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency: publish
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}index.json
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+
+      - run: bun install --frozen-lockfile
+
+      - run: bun run typecheck
+
+      - run: bun run build
+
+      - name: Check the committed dist/ matches the build
+        run: git diff --exit-code -- dist
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - name: Deploy dist/ to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v4

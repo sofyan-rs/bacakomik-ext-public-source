@@ -5,20 +5,22 @@ JavaScript file that the app downloads and runs inside QuickJS.
 
 This is the public part of the repository: the host typings, the build and
 test scripts, and the docs. The extension sources (`src/`) and the build output
-(`dist/`) are kept in a private repository. Use this repository to write and
+(`dist/`) of the official extensions are kept in a private repository. Use this repository to write and
 test your own extension (see [docs/CONTRIBUTION.md](docs/CONTRIBUTION.md)),
 or to host a third-party extension repository the app can add.
 
 ## Adding the repository in the app
 
-The app adds this repository on first run. To add it by hand:
+Add this repository in the app with:
 
 ```
-https://bacakomik-ext.kurodev.org/index.json
+https://sofyan-rs.github.io/bacakomik-ext-public-source/index.json
 ```
 
-That is a Cloudflare Worker serving `dist/` as static files (config in the private repository),
-deployed by the Publish workflow (or by hand: `npx wrangler deploy`).
+That is GitHub Pages serving `dist/` as static files, deployed by the
+`Publish` workflow (`.github/workflows/publish.yml`) on every push to `main`
+that touches the extensions. `dist/` is committed; the workflow fails if it is
+out of date, so run `bun run build` before committing.
 
 The app reads `index.json`, lists the extensions, and downloads each `file`
 (resolved relative to `index.json`). It checks each download against
@@ -37,7 +39,7 @@ src/<id>/meta.json   extension metadata
 scripts/build.ts     validates src/, writes dist/
 scripts/bundle.ts    copies chosen extensions into the app's assets
 scripts/run.ts       local runner and smoke test
-dist/                build output: index.json + extensions/*.js (committed, deployed to the Worker)
+dist/                build output: index.json + extensions/*.js (committed, deployed to GitHub Pages)
 ```
 
 ## Commands

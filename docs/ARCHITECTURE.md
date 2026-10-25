@@ -8,7 +8,7 @@ add or change an extension, follow [CONTRIBUTION.md](CONTRIBUTION.md).
 ```
  you write                 bun run build              git push main             the app
 ┌──────────────┐        ┌──────────────────┐       ┌──────────────────┐      ┌──────────────┐
-│ src/<id>/    │ ─────► │ dist/index.json  │ ────► │ Cloudflare Worker│ ───► │ BacaKomik app│
+│ src/<id>/    │ ─────► │ dist/index.json  │ ────► │ GitHub Pages     │ ───► │ BacaKomik app│
 │  meta.json   │        │ dist/extensions/ │       │ (static files)   │      │ runs the .js │
 │  index.js    │        │  <id>.v<ver>.js  │       │                  │      │ in QuickJS   │
 └──────────────┘        └──────────────────┘       └──────────────────┘      └──────────────┘
@@ -18,7 +18,7 @@ add or change an extension, follow [CONTRIBUTION.md](CONTRIBUTION.md).
 2. `bun run build` checks every folder and copies the code to `dist/`.
    It also writes `dist/index.json`, the list of all extensions.
 3. When you push to `main`, GitHub Actions deploys `dist/` to
-   `https://bacakomik-ext.kurodev.org`.
+   GitHub Pages.
 4. The app downloads `index.json`, then downloads each extension file and
    runs it.
 
@@ -37,7 +37,6 @@ app** on the user's phone.
 | `scripts/run.ts` | Runs an extension on your computer, for testing | Rarely |
 | `scripts/bundle.ts` | Copies some extensions into the app's assets | Rarely |
 | `.github/workflows/publish.yml` | Deploys `dist/` on push | Rarely |
-| `wrangler.toml` | Cloudflare Worker settings | Rarely |
 
 ## How the app talks to an extension
 
@@ -138,13 +137,13 @@ an array (one item). A missing key means "use the default".
 ## Deploy
 
 `.github/workflows/publish.yml` runs on every push to `main` that changes
-`src/`, `scripts/`, `dist/`, or `wrangler.toml`. It:
+`src/`, `scripts/`, or `dist/`. It:
 
 1. runs `bun run typecheck`,
 2. runs `bun run build`,
 3. **fails if `dist/` differs from what you committed** (you forgot to build),
-4. deploys `dist/` to the Cloudflare Worker.
+4. deploys `dist/` to GitHub Pages.
 
-Manual deploy: `npx wrangler deploy`.
+Manual deploy: Actions > Publish > Run workflow.
 
-The app's repository URL is `https://bacakomik-ext.kurodev.org/index.json`.
+The app's repository URL is `https://sofyan-rs.github.io/bacakomik-ext-public-source/index.json`.
