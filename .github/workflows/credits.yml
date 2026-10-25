@@ -1,0 +1,32 @@
+# Regenerates the Credits table in README.md from the `credits` field of
+# src/*/meta.json and commits it, so pull requests never edit the table.
+name: Credits
+
+on:
+  push:
+    branches: [main]
+    paths: ['src/*/meta.json', 'scripts/credits.ts', '.github/workflows/credits.yml']
+  workflow_dispatch:
+
+concurrency: credits
+
+permissions:
+  contents: write
+
+jobs:
+  credits:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+
+      - run: bun scripts/credits.ts
+
+      - name: Commit README.md if the table changed
+        run: |
+          git diff --quiet -- README.md && exit 0
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898283+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'docs: update credits table' -- README.md
+          git push

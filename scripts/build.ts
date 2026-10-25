@@ -20,7 +20,7 @@ function validateMeta(dir: string, meta: any) {
     throw new Error(`src/${dir}/meta.json: ${msg}`)
   }
   if (!meta || typeof meta !== 'object' || Array.isArray(meta)) fail('must be an object')
-  for (const k of Object.keys(meta)) if (![...META_KEYS, 'languages', 'urlPatterns'].includes(k)) fail(`unknown key "${k}"`)
+  for (const k of Object.keys(meta)) if (![...META_KEYS, 'languages', 'urlPatterns', 'credits'].includes(k)) fail(`unknown key "${k}"`)
   for (const k of META_KEYS) if (!(k in meta)) fail(`missing "${k}"`)
   if (meta.id !== dir) fail(`id "${meta.id}" must match folder name "${dir}"`)
   if (!/^[a-z0-9][a-z0-9-]*$/.test(meta.id)) fail('id must be lowercase [a-z0-9-]')
@@ -50,6 +50,12 @@ function validateMeta(dir: string, meta: any) {
       // One capture group: the slug.
       if (new RegExp(`${re!.source}|`).exec('')!.length !== 2) fail(`urlPatterns: "${p}" needs exactly one capture group`)
     }
+  }
+  if ('credits' in meta) {
+    // Folders in keiyoushi/extensions-source, listed in the README's Credits table.
+    const ok = Array.isArray(meta.credits) && meta.credits.length > 0 &&
+      meta.credits.every((c: unknown) => typeof c === 'string' && /^(src|lib-multisrc)(\/[a-z0-9_-]+)+$/.test(c))
+    if (!ok) fail('credits must be keiyoushi folders like "src/en/comix"')
   }
 }
 
@@ -97,7 +103,8 @@ for (const dir of ['', SCRIPTS + '/']) {
 
 const index = {
   name: REPO_NAME,
-  extensions: extensions.map(({ meta, file, bytes }) => {
+  // credits only feed the README, not the app.
+  extensions: extensions.map(({ meta: { credits, ...meta }, file, bytes }) => {
     writeFileSync(DIST + file, bytes)
     const sha256 = createHash('sha256').update(bytes).digest('hex')
     console.log(`dist/${file}  ${sha256.slice(0, 12)}  ${bytes.length} B`)

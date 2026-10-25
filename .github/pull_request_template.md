@@ -23,7 +23,7 @@
 - [ ] `version` in `meta.json` is bumped (if `index.js` changed)
 - [ ] `bun run build` was run after the last change
 - [ ] `src/<id>` and `dist/` are both committed
-- [ ] Credit note added (if ported from keiyoushi)
+- [ ] Credit note in `index.js` and `credits` in `meta.json` (if ported from keiyoushi)
 
 ## Smoke output
 

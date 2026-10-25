@@ -67,6 +67,7 @@ The folder name is the ID. Use only lowercase letters, numbers and `-`.
 | `baseUrl` | Home page of the site, `https://` |
 | `nsfw` | `true` if the site has adult content |
 | `urlPatterns` | Optional. Regexes that find the slug in a series URL path (below) |
+| `credits` | Optional. keiyoushi folders the code was ported from (see the end of Recipe A) |
 
 `urlPatterns` lets the app turn a series link into a slug without running
 the script, for example when it imports a Mihon/Tachiyomi backup. Each
@@ -290,7 +291,15 @@ install the extension.
 
 If you copied code from
 [keiyoushi/extensions-source](https://github.com/keiyoushi/extensions-source),
-keep a credit note at the top of `index.js`.
+keep a credit note at the top of `index.js` and list the keiyoushi folders you
+ported from in `meta.json`:
+
+```json
+"credits": ["src/en/example", "lib-multisrc/mangathemesia"]
+```
+
+Do not edit the Credits table in `README.md`. A workflow rebuilds it from
+`credits` after the merge to `main`.
 
 ---
 
