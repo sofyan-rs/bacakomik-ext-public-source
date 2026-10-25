@@ -86,11 +86,11 @@ Series = {
   format: string | null,        // lowercase: 'manga' | 'manhwa' | 'manhua' | ...
   status: string | null,        // lowercase: 'ongoing' | 'completed' | ...
   rating: number | null, totalChapters: number | null,
+  altTitles?: string[] | null,  // every alternative title, split, without the main title
 }
 
 SeriesDetail = Series & {
   nativeTitle: string | null, releaseDate: string | null,
-  altTitles?: string[] | null,  // every alternative title, split, without the main title
   author: string | null,         // authors then artists, joined with ', '
   synopsis: string | null,
   genres: { id: string, name: string }[],   // id = a value of the 'genre' filter
@@ -124,7 +124,9 @@ FilterGroup = {
   romanized, older names. Split the site's string on the separator it uses
   (`•`, `|`, `;`, ` / `, line breaks). Split on `, ` only when there is no
   other separator, because titles often contain commas. Drop the main title,
-  placeholders (`-`, `N/A`, `Field Kosong`) and repeats.
+  placeholders (`-`, `N/A`, `Updating`, `Field Kosong`) and repeats.
+  Send it in `browse` items too when the list has it: the app matches
+  comics by these titles when moving a library between sources.
 - **`nativeTitle`**: one title for older apps, usually the first of
   `altTitles`.
 

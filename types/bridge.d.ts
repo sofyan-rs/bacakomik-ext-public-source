@@ -107,16 +107,18 @@ interface Series {
   status: string | null
   rating: number | null
   totalChapters: number | null
+  /**
+   * Every alternative title (other languages, romanized, older names), one
+   * per item, without the main title, placeholders or repeats. Optional; send
+   * it in `browse` items too when the list has it: the app matches comics by
+   * these titles when moving a library between sources. In `series`, apps
+   * fall back to `nativeTitle` when missing.
+   */
+  altTitles?: string[] | null
 }
 
 interface SeriesDetail extends Series {
   nativeTitle: string | null
-  /**
-   * Every alternative title (other languages, romanized, older names), one
-   * per item, without the main title, placeholders or repeats. Optional: apps
-   * fall back to `nativeTitle` when missing.
-   */
-  altTitles?: string[] | null
   releaseDate: string | null
   /** Authors then artists, without repeats, joined with `, `. */
   author: string | null

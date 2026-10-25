@@ -2,7 +2,7 @@
   "id": "bacakomik",
   "name": "BacaKomik",
   "lang": "id",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "apiVersion": 1,
   "baseUrl": "https://bacakomik.my",
   "urlPatterns": ["^/komik/([^/?#]+)"],
