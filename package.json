@@ -1,0 +1,15 @@
+{
+  "name": "bacakomik-ext",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "bun scripts/build.ts",
+    "run": "bun scripts/run.ts",
+    "typecheck": "tsc --noEmit",
+    "bundle": "bun scripts/bundle.ts"
+  },
+  "devDependencies": {
+    "node-html-parser": "^7.0.1",
+    "typescript": "^5.9.3"
+  }
+}
