@@ -122,7 +122,7 @@ FilterGroup  = { key: string, label: string,
 FilterValues = Record<string, string[]>         // group key -> values; missing key = group default
 Series       = { slug: string, title: string, cover: string|null, format: string|null,
                  status: string|null, rating: number|null, totalChapters: number|null }
-SeriesDetail = Series & { nativeTitle: string|null, releaseDate: string|null,
+SeriesDetail = Series & { nativeTitle: string|null, altTitles?: string[]|null, releaseDate: string|null,
                           author: string|null, synopsis: string|null,
                           genres: { id: string, name: string }[] }
 Chapter      = { number: number, createdAt: string|null /* ISO 8601 */ }

@@ -111,7 +111,14 @@ interface Series {
 
 interface SeriesDetail extends Series {
   nativeTitle: string | null
+  /**
+   * Every alternative title (other languages, romanized, older names), one
+   * per item, without the main title, placeholders or repeats. Optional: apps
+   * fall back to `nativeTitle` when missing.
+   */
+  altTitles?: string[] | null
   releaseDate: string | null
+  /** Authors then artists, without repeats, joined with `, `. */
   author: string | null
   synopsis: string | null
   genres: Genre[]

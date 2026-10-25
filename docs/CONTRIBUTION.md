@@ -208,8 +208,9 @@ HTML template. Change every line marked `TODO`:
         rating: null,
         totalChapters: null,
         nativeTitle: null,
+        altTitles: [], // optional: every alternative title, split
         releaseDate: null,
-        author: await text(body, '.author'),
+        author: await text(body, '.author'), // authors then artists, joined with ', '
         synopsis: await text(body, '.synopsis'),
         genres: genres.map((g) => ({ id: slugOf(g.attrs.href), name: g.text.trim() })),
       }

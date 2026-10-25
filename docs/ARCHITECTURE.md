@@ -90,7 +90,9 @@ Series = {
 
 SeriesDetail = Series & {
   nativeTitle: string | null, releaseDate: string | null,
-  author: string | null, synopsis: string | null,
+  altTitles?: string[] | null,  // every alternative title, split, without the main title
+  author: string | null,         // authors then artists, joined with ', '
+  synopsis: string | null,
   genres: { id: string, name: string }[],   // id = a value of the 'genre' filter
 }
 
@@ -111,6 +113,20 @@ FilterGroup = {
   quick?: boolean,               // shown above the grid; max one group
 }
 ```
+
+### Field rules
+
+- **`author`**: everyone credited, authors first, then artists, without
+  repeats, joined with `, ` (`Chugong, DUBU (REDICE STUDIO)`). If the site
+  has separate author and artist fields, read both. If it has one field,
+  send it as it is. `null` when the site has none.
+- **`altTitles`**: every alternative title as its own item: other languages,
+  romanized, older names. Split the site's string on the separator it uses
+  (`•`, `|`, `;`, ` / `, line breaks). Split on `, ` only when there is no
+  other separator, because titles often contain commas. Drop the main title,
+  placeholders (`-`, `N/A`, `Field Kosong`) and repeats.
+- **`nativeTitle`**: one title for older apps, usually the first of
+  `altTitles`.
 
 `browse` gets filters as `{ key: string[] }`, for example
 `{ sort: ['popular'], genre: ['action', 'drama'] }`. A select group also gets
