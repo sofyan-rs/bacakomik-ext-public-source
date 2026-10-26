@@ -1,5 +1,6 @@
-// Validates src/*/meta.json + index.js and writes dist/extensions/<id>.v<version>.js and
-// dist/index.json (whose `file` fields are relative to it).
+// Validates src/*/meta.json + index.js and writes dist/extensions/<id>.v<version>.js,
+// dist/icon/<id>.png (from the optional src/<id>/icon.png) and dist/index.json
+// (whose `file` and `icon` fields are relative to it).
 import { createHash } from 'node:crypto'
 import { mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync, existsSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
@@ -12,6 +13,9 @@ const DIST = ROOT + 'dist/'
 const REPO_NAME = 'BacaKomik Extensions Public'
 /** Folder of the scripts inside dist/. */
 const SCRIPTS = 'extensions'
+/** Folder of the icons inside dist/. */
+const ICONS = 'icon'
+const PNG_MAGIC = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])
 
 const META_KEYS = ['id', 'name', 'lang', 'version', 'apiVersion', 'baseUrl', 'nsfw']
 
@@ -86,13 +90,26 @@ for (const id of ids) {
   const bytes = readFileSync(codePath)
   validateCode(id, bytes.toString('utf8'))
   const file = `${SCRIPTS}/${id}.v${meta.version}.js`
-  extensions.push({ meta, file, bytes })
+  // Optional; without one the app shows the name's first letter.
+  const iconPath = `${SRC}${id}/icon.png`
+  let icon: { file: string; bytes: Buffer } | undefined
+  if (existsSync(iconPath)) {
+    const iconBytes = readFileSync(iconPath)
+    if (!iconBytes.subarray(0, 8).equals(PNG_MAGIC)) throw new Error(`src/${id}/icon.png: not a PNG`)
+    icon = { file: `${ICONS}/${id}.png`, bytes: iconBytes }
+  }
+  extensions.push({ meta, file, bytes, icon })
 }
 
-// Anything but index.json and the current scripts is stale.
+// Anything but index.json, the current scripts and the icons is stale.
 mkdirSync(DIST + SCRIPTS, { recursive: true })
-const keep = new Set(['index.json', SCRIPTS, ...extensions.map((e) => e.file)])
-for (const dir of ['', SCRIPTS + '/']) {
+mkdirSync(DIST + ICONS, { recursive: true })
+const keep = new Set([
+  'index.json', SCRIPTS, ICONS,
+  ...extensions.map((e) => e.file),
+  ...extensions.flatMap((e) => (e.icon ? [e.icon.file] : [])),
+])
+for (const dir of ['', SCRIPTS + '/', ICONS + '/']) {
   for (const f of readdirSync(DIST + dir)) {
     if (!keep.has(dir + f)) {
       rmSync(DIST + dir + f, { recursive: true })
@@ -104,11 +121,14 @@ for (const dir of ['', SCRIPTS + '/']) {
 const index = {
   name: REPO_NAME,
   // credits only feed the README, not the app.
-  extensions: extensions.map(({ meta: { credits, ...meta }, file, bytes }) => {
+  extensions: extensions.map(({ meta: { credits, ...meta }, file, bytes, icon }) => {
     writeFileSync(DIST + file, bytes)
     const sha256 = createHash('sha256').update(bytes).digest('hex')
     console.log(`dist/${file}  ${sha256.slice(0, 12)}  ${bytes.length} B`)
-    return { ...meta, file, sha256 }
+    if (!icon) return { ...meta, file, sha256 }
+    writeFileSync(DIST + icon.file, icon.bytes)
+    console.log(`dist/${icon.file}  ${icon.bytes.length} B`)
+    return { ...meta, file, sha256, icon: icon.file }
   }),
 }
 writeFileSync(DIST + 'index.json', JSON.stringify(index, null, 2) + '\n')

@@ -36,10 +36,11 @@ built on Windows match the files GitHub serves.
 types/bridge.d.ts    host globals + contract types (used by typecheck)
 src/<id>/index.js    extension code
 src/<id>/meta.json   extension metadata
+src/<id>/icon.png    optional icon (square PNG, ~96x96)
 scripts/build.ts     validates src/, writes dist/
 scripts/bundle.ts    copies chosen extensions into the app's assets
 scripts/run.ts       local runner and smoke test
-dist/                build output: index.json + extensions/*.js (committed, deployed to GitHub Pages)
+dist/                build output: index.json + extensions/*.js + icon/*.png (committed, deployed to GitHub Pages)
 ```
 
 ## Commands
@@ -183,6 +184,11 @@ source.
 find the slug in a series URL path (`/manga/<slug>/`). The app uses them to
 import Mihon/Tachiyomi backups without running the script.
 
+`src/<id>/icon.png` (optional) is the icon the app shows in its Extensions
+list: a square PNG, about 96x96. The build copies it to `dist/icon/<id>.png`
+and adds `icon` to the extension's `index.json` entry. Without one the app
+shows the name's first letter. Changing only the icon needs no version bump.
+
 ## index.json
 
 ```json
@@ -191,14 +197,16 @@ import Mihon/Tachiyomi backups without running the script.
   "extensions": [
     { "id": "...", "name": "...", "lang": "id", "version": "1.2.0", "apiVersion": 1,
       "baseUrl": "...", "nsfw": false,
-      "file": "bacakomik.v1.2.0.js", "sha256": "<hex of file bytes>" }
+      "file": "bacakomik.v1.2.0.js", "sha256": "<hex of file bytes>",
+      "icon": "icon/bacakomik.png" }
   ]
 }
 ```
 
 ## Adding an extension
 
-1. Create `src/<id>/meta.json` and `src/<id>/index.js`.
+1. Create `src/<id>/meta.json` and `src/<id>/index.js` (and optionally
+   `src/<id>/icon.png`).
 2. `bun run typecheck && bun scripts/run.ts <id> smoke`
 3. `bun run build` and commit `src/` + `dist/`.
 

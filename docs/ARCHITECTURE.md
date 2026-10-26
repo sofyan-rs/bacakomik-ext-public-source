@@ -31,6 +31,7 @@ app** on the user's phone.
 | --- | --- | --- |
 | `src/<id>/meta.json` | Name, language, version of one extension | Yes |
 | `src/<id>/index.js` | The code of one extension | Yes |
+| `src/<id>/icon.png` | Optional icon shown in the app (square PNG, ~96x96) | Yes |
 | `dist/` | Build output. Committed to git | No. `bun run build` writes it |
 | `types/bridge.d.ts` | Types of the app's globals and of the contract | Only if the app changes |
 | `scripts/build.ts` | Checks `src/` and writes `dist/` | Rarely |

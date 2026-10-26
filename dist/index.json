@@ -13,7 +13,8 @@
       ],
       "nsfw": false,
       "file": "extensions/bacakomik.v1.3.0.js",
-      "sha256": "6b94cf9c798ca69ac3420ab1330282223d67bc33c3c620600b2ff9181f9f8733"
+      "sha256": "6b94cf9c798ca69ac3420ab1330282223d67bc33c3c620600b2ff9181f9f8733",
+      "icon": "icon/bacakomik.png"
     }
   ]
 }

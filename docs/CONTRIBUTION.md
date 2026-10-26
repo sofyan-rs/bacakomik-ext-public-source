@@ -39,9 +39,14 @@ an API. JSON is much easier than HTML. If you find an API, use it.
 ```
 src/example/meta.json
 src/example/index.js
+src/example/icon.png    (optional)
 ```
 
 The folder name is the ID. Use only lowercase letters, numbers and `-`.
+
+`icon.png` is the icon the app shows in its Extensions list. Use a square
+PNG, about 96x96 (Keiyoushi's `res/mipmap-xhdpi/ic_launcher.png` fits).
+Without one the app shows the name's first letter.
 
 ### Step 3. Write `meta.json`
 
