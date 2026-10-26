@@ -47,7 +47,7 @@ Each function answers one screen of the app:
 | App screen | Function the app calls | You return |
 | --- | --- | --- |
 | Filter sheet | `filters()` | List of filter groups (sort, genre, ...) |
-| Home: two rows | `home` (an object, not a function) | Filter values for "featured" and "latest" |
+| Home: two rows | `home` (an object, not a function) | Filter values for "featured" (new series, else popular) and "latest" (latest update) |
 | Browse / search grid | `browse({ page, limit, query, filters })` | `{ items: Series[], hasNext }` |
 | Series page | `series(slug)` | One series with details |
 | Chapter list | `chapters(slug)` | Chapters, **newest first** |

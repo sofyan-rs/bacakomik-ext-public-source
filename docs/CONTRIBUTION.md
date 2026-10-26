@@ -150,6 +150,7 @@ HTML template. Change every line marked `TODO`:
           type: 'select',
           options: [
             { value: 'latest', label: 'Latest update' }, // TODO: site's values
+            { value: 'newest', label: 'New series' },
             { value: 'popular', label: 'Popular' },
           ],
         },
@@ -167,7 +168,9 @@ HTML template. Change every line marked `TODO`:
     },
 
     // What Home shows. Values must be options from filters().
-    home: { featured: { sort: ['popular'] }, latest: { sort: ['latest'] } },
+    // featured: newly added series; popular only if the site has no such sort,
+    // then also set featuredLabel: 'Popular' (the app titles it "New series").
+    home: { featured: { sort: ['newest'] }, latest: { sort: ['latest'] } },
 
     async browse({ page, query, filters }) {
       // TODO: build the site's list or search URL.

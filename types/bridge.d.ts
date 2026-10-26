@@ -158,8 +158,13 @@ interface BrowseResult {
 interface Extension {
   /** Filter groups for the filter sheet; may fetch. Called once per app session. */
   filters?(): Promise<FilterGroup[]>
-  /** Filter values for Home's two sections. */
-  home?: { featured: FilterValues; latest: FilterValues }
+  /**
+   * Filter values for Home's two sections. `featured`: newly added series
+   * (popular only if the site cannot sort by date added). `latest`: latest
+   * chapter update. The app titles them "New series" and "Latest updates";
+   * set `featuredLabel: 'Popular'` when `featured` falls back to popular.
+   */
+  home?: { featured: FilterValues; latest: FilterValues; featuredLabel?: string; latestLabel?: string }
   browse(params: BrowseParams): Promise<BrowseResult>
   /**
    * Page of the series on the site, opened in the app's WebView (e.g. to pass
