@@ -5,6 +5,7 @@ import { createHash } from 'node:crypto'
 import { mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync, existsSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import vm from 'node:vm'
+import { getQuickJS } from 'quickjs-emscripten'
 import { loadExtension } from './run.ts'
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url))
@@ -16,6 +17,12 @@ const SCRIPTS = 'extensions'
 /** Folder of the icons inside dist/. */
 const ICONS = 'icon'
 const PNG_MAGIC = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])
+
+// The app's QuickJS (flutter_js on Android) is older than Node's parser and
+// rejects some valid code, e.g. a line starting with `await` right after an
+// arrow function ("expecting ';'"). quickjs-emscripten 0.10.0, pinned, has a
+// QuickJS of that age; every script must parse in it too.
+const oldQuickJS = await getQuickJS()
 
 const META_KEYS = ['id', 'name', 'lang', 'version', 'apiVersion', 'baseUrl', 'nsfw']
 
@@ -69,6 +76,22 @@ function validateCode(id: string, code: string) {
     new vm.Script(code, { filename: `src/${id}/index.js` })
   } catch (e: any) {
     throw new Error(`src/${id}/index.js: ${e?.message}`)
+  }
+  // Compiled inside a function that never runs: parsing only.
+  const context = oldQuickJS.createVm()
+  try {
+    const result = context.evalCode(`(function () {
+${code}
+})`, `src/${id}/index.js`)
+    if (result.error) {
+      const error = context.dump(result.error)
+      result.error.dispose()
+      // Line numbers are off by one: the wrapper adds a line.
+      throw new Error(`src/${id}/index.js: the app's QuickJS can't parse it: ${error?.message} (${String(error?.stack || '').trim()}, minus 1)`)
+    }
+    result.value.dispose()
+  } finally {
+    context.dispose()
   }
   // Evaluate offline to verify defineExtension(), the method set and home's shape.
   // filters() may fetch, so its groups are only checked by `run.ts smoke`.

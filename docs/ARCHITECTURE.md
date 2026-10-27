@@ -15,7 +15,10 @@ add or change an extension, follow [CONTRIBUTION.md](CONTRIBUTION.md).
 ```
 
 1. An **extension** is one website (a "source"). It is one folder in `src/`.
-2. `bun run build` checks every folder and copies the code to `dist/`.
+2. `bun run build` checks every folder and copies the code to `dist/`. The
+   code must also parse in an older QuickJS, the one the app has: valid
+   JavaScript it can't read (e.g. a line starting with `await` right after an
+   arrow function) fails the build.
    It also writes `dist/index.json`, the list of all extensions.
 3. When you push to `main`, GitHub Actions deploys `dist/` to
    GitHub Pages.
