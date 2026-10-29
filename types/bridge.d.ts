@@ -167,10 +167,12 @@ interface Extension {
   home?: { featured: FilterValues; latest: FilterValues; featuredLabel?: string; latestLabel?: string }
   browse(params: BrowseParams): Promise<BrowseResult>
   /**
-   * Page of the series on the site, opened in the app's WebView (e.g. to pass
-   * a Cloudflare check). Optional; the app falls back to `baseUrl`.
+   * Page of the series on the site, or of its chapter [number] when given,
+   * opened in the app's WebView (e.g. to pass a Cloudflare check, or to read
+   * a chapter on the site). May be async, to look the chapter up. Optional;
+   * the app falls back to `baseUrl`.
    */
-  webUrl?(slug: string): string
+  webUrl?(slug: string, number?: number): string | Promise<string>
   /** Throws an Error starting with `404` when missing. */
   series(slug: string): Promise<SeriesDetail>
   /** Newest first. */

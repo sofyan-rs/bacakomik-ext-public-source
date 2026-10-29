@@ -106,8 +106,8 @@ defineExtension({
   async browse({ page, limit, query, filters }) {
     return { items: [/* Series */], hasNext: true }
   },
-  // Optional. The series' page on the site, for the app's WebView.
-  webUrl(slug) { return `https://example.com/series/${slug}` },
+  // Optional. The series' page on the site, or its chapter's, for the app's WebView.
+  webUrl(slug, number) { return `https://example.com/series/${slug}${number == null ? '' : `/${number}`}` },
   async series(slug) { /* SeriesDetail */ },
   async chapters(slug) { /* Chapter[], newest first */ },
   async chapter(slug, number) { return { number, title, prev, next, images, headers } },
@@ -143,7 +143,8 @@ ChapterContent = { number: number, title: string|null, prev: number|null,
 - `format` and `status` are lowercase (`'manhwa'`, `'ongoing'`).
 - `prev`/`next` are chapter numbers or `null`.
 - `webUrl` is what the app's WebView opens for a series, e.g. to pass a
-  Cloudflare check. Cookies set there are copied into the extension's cookie
+  Cloudflare check; with a chapter `number`, the page of that chapter (the
+  reader's "Open in WebView"). It may be async, to look the chapter up. Cookies set there are copied into the extension's cookie
   jar, and the WebView uses the same User-Agent as `http.fetch`. Without
   `webUrl` the app opens `baseUrl`.
 - `headers` (optional) go with every image request of the chapter, in the

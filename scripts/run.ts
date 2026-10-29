@@ -285,7 +285,7 @@ async function smoke(id: string, ext: any) {
   }
   step('series', short({ ...detail, synopsis: detail.synopsis?.slice(0, 40) }))
   if (ext.webUrl) {
-    const url = ext.webUrl(slug)
+    const url = await ext.webUrl(slug)
     if (typeof url !== 'string' || !url.startsWith('https://')) {
       throw new Error(`webUrl(${slug}) must return an https URL, got ${short(url)}`)
     }
@@ -321,6 +321,14 @@ async function smoke(id: string, ext: any) {
   const img = await fetch(ch.images[0], { headers: { 'User-Agent': DEFAULT_UA, ...(ch.headers ?? {}) } })
   if (!img.ok) throw new Error(`chapter(): first image answers ${img.status} with the given headers`)
   step('chapter', `#${ch.number} prev=${ch.prev} next=${ch.next} ${ch.images.length} images, first ${ch.images[0]}`)
+  if (ext.webUrl) {
+    const url = await ext.webUrl(slug, target)
+    if (typeof url !== 'string' || !url.startsWith('https://')) {
+      throw new Error(`webUrl(${slug}, ${target}) must return an https URL, got ${short(url)}`)
+    }
+    if (url === (await ext.webUrl(slug))) throw new Error(`webUrl(${slug}, ${target}) gives the series page, not the chapter's`)
+    step('webUrl(chapter)', url)
+  }
 
   const missing = `this-does-not-exist-${Date.now()}`
   try {
@@ -353,6 +361,8 @@ function coerce(method: string, args: string[]) {
       return [args[0]]
     case 'chapter':
       return [args[0], Number(args[1])]
+    case 'webUrl':
+      return args[1] === undefined ? [args[0]] : [args[0], Number(args[1])]
     default:
       return args.map(json)
   }
@@ -380,7 +390,7 @@ if (import.meta.main) {
     if (method === 'smoke') {
       await smoke(id, ext)
     } else {
-      if (![...METHODS, 'filters'].includes(method)) throw new Error(`unknown method ${method}`)
+      if (![...METHODS, 'filters', 'webUrl'].includes(method)) throw new Error(`unknown method ${method}`)
       if (typeof ext[method] !== 'function') throw new Error(`${id} does not implement ${method}()`)
       const result = await ext[method](...coerce(method, args))
       console.log(JSON.stringify(result, null, 2))

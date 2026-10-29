@@ -55,7 +55,7 @@ Each function answers one screen of the app:
 | Series page | `series(slug)` | One series with details |
 | Chapter list | `chapters(slug)` | Chapters, **newest first** |
 | Reader | `chapter(slug, number)` | Image URLs + prev/next chapter number |
-| "Open in browser" | `webUrl(slug)` (optional) | The series URL on the website |
+| "Open in browser" | `webUrl(slug, number?)` (optional) | The series URL on the website, or the chapter's with `number` |
 
 A **slug** is your own ID for a series. It is any string that lets you find
 the series again (for example `solo-leveling` or `solo-leveling-1234`).

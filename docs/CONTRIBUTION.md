@@ -200,8 +200,11 @@ HTML template. Change every line marked `TODO`:
       return { items, hasNext }
     },
 
-    webUrl(slug) {
-      return `${BASE}/manga/${slug}/` // TODO
+    // With a chapter number, that chapter's page (the reader's "Open in
+    // WebView"); may be async to look the chapter up.
+    webUrl(slug, number) {
+      const series = `${BASE}/manga/${slug}/` // TODO
+      return number == null ? series : `${series}chapter-${number}/` // TODO
     },
 
     async series(slug) {
